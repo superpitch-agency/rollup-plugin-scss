@@ -81,9 +81,9 @@ function css (options) {
       
       Promise.all(Object.keys(styles).map(function (id) {
         return compileToCSS(styles[id])
-      })).resolve(function (allStyles) {
+      })).then(function (allStyles) {
         for(var i = 0; i < Object.keys(styles).length; i++){
-            var id = styles[id];
+            var id = styles[i];
             compiledStyles[id] = allStyles[i];
         } 
         // Combine all stylesheets
