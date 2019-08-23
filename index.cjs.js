@@ -78,19 +78,20 @@ function css (options) {
       if (options.output === false) {
         return
       }
-       
-      for(var id in styles) {
-          compiledStyles[id] = compileToCSS(styles[id]) || '';
-      }
-
-      // Combine all stylesheets
-      var css = '';
-      for (var id$1 in compiledStyles) {
-          css += compiledStyles[id$1] || '';
-      }
-
-      // Resolve if porcessor returned a Promise
-      Promise.resolve(css).then(function (css) {
+      
+      Promise.all(Object.keys(styles).map(function (id) {
+        return compileToCSS(styles[id])
+      })).resolve(function (allStyles) {
+        for(var i = 0; i < Object.keys(styles).length; i++){
+            var id = styles[id];
+            compiledStyles[id] = allStyles[i];
+        } 
+        // Combine all stylesheets
+        var css = '';
+        for (var id$1 in compiledStyles) {
+            css += compiledStyles[id$1] || '';
+        }
+        
         // Emit styles through callback
         if (typeof options.output === 'function') {
           options.output(css, styles, compiledStyles);

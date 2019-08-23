@@ -74,19 +74,20 @@ export default function css (options = {}) {
       if (options.output === false) {
         return
       }
-       
-      for(const id in styles) {
-          compiledStyles[id] = compileToCSS(styles[id]) || ''
-      }
-
-      // Combine all stylesheets
-      let css = ''
-      for (const id in compiledStyles) {
-          css += compiledStyles[id] || ''
-      }
-
-      // Resolve if porcessor returned a Promise
-      Promise.resolve(css).then(css => {
+      
+      Promise.all(Object.keys(styles).map(id => {
+        return compileToCSS(styles[id])
+      })).resolve(allStyles => {
+        for(let i = 0; i < Object.keys(styles).length; i++){
+            const id = styles[id];
+            compiledStyles[id] = allStyles[i];
+        } 
+        // Combine all stylesheets
+        let css = ''
+        for (const id in compiledStyles) {
+            css += compiledStyles[id] || ''
+        }
+        
         // Emit styles through callback
         if (typeof options.output === 'function') {
           options.output(css, styles, compiledStyles)
@@ -120,7 +121,7 @@ export default function css (options = {}) {
             }
           }
         })
-      })
+      });
     }
   }
 }
