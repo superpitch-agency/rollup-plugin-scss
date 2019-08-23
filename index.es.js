@@ -78,8 +78,9 @@ export default function css (options = {}) {
       Promise.all(Object.keys(styles).map(id => {
         return compileToCSS(styles[id])
       })).then(allStyles => {
-        for(let i = 0; i < Object.keys(styles).length; i++){
-            const id = styles[i];
+        const stylesIds = Object.keys(styles);
+        for(let i = 0; i < stylesIds.length; i++){
+            const id = stylesIds[i];
             compiledStyles[id] = allStyles[i];
         } 
         // Combine all stylesheets
