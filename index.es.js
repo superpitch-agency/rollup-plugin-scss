@@ -79,7 +79,7 @@ export default function css (options = {}) {
         return compileToCSS(styles[id])
       })).then(allStyles => {
         for(let i = 0; i < Object.keys(styles).length; i++){
-            const id = styles[id];
+            const id = styles[i];
             compiledStyles[id] = allStyles[i];
         } 
         // Combine all stylesheets
